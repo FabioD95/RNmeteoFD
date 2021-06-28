@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Button, Image, TouchableOpacity, Platform, Dimensions, ActivityIndicator, FlatList, Animated } from 'react-native';
+import { StyleSheet, Text, View, Button, Image, TouchableOpacity, Platform, Dimensions, ActivityIndicator, FlatList, Animated, ImageBackground } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux'
 import axios from 'axios'
 import { useNavigation, useRoute } from '@react-navigation/native';
 import {setWeatherCity} from '../store/actions'
+import {backImage} from '../components/backImage';
 
 
 export default function cityList() {
@@ -25,28 +26,41 @@ export default function cityList() {
     const renderItem = ({ item, index }) => {
     const iconCode = item.list[0].weather[0].icon
     const iconApi = `http://openweathermap.org/img/wn/${iconCode}@2x.png`
-    const dayWeek = new Date(item.list[0].dt_txt).getDay()
+    const dayWeek = new Date((item.list[0].dt_txt).slice(0, 10)).getDay()
     const dayName = ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato']
     const monthName = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre']
     //const timeZone = item.city.timezone / 3600 - 1
-
+    
+    const back_image = backImage(iconCode)
     return (
+        
         <TouchableOpacity onPress={() => {navigation.navigate('CityWeather'); dispatch(setWeatherCity(index))}}>
+        
             <View style={styles.itemContainer}>
-                <View style={styles.itemLeft}>
-                    <Text>{item.city.name}</Text>
-                    <Text>{dayName[dayWeek - 1]} {currentDate.date},</Text>
-                    <Text>{monthName[currentDate.month]}</Text>
-                    <Text>{currentDate.hours}: {currentDate.min}</Text>
-                </View>
-                <View style={styles.itemCenter}>
-                    <Image source={{uri: iconApi}} style={{width:50, height:50}}/>
-                </View>
-                <View style={styles.itemRight}>
-                    <Text>{String(item.list[0].main.temp - 273.15).slice(0, 2)}°</Text>
-                </View>
+                <ImageBackground source={back_image} style={{width: '100%', borderRadius: 25,}} blurRadius={10} >
+                    <View style={styles.itemContainer2}>
+
+                    <View style={styles.itemLeft}>
+                        <Text style={{fontSize: 25, fontWeight: 'bold', color: 'white'}}>{item.city.name}</Text>
+                        <Text style={{fontSize: 15, fontWeight: 'bold', color: 'white'}}>{dayName[dayWeek]} {currentDate.date},</Text>
+                        <Text style={{fontSize: 15, fontWeight: 'bold', color: 'white'}}>{monthName[currentDate.month]}</Text>
+                        <Text style={{fontSize: 10, fontWeight: 'normal', color: 'white'}}>{currentDate.hours}: {currentDate.min}</Text>
+                    </View>
+
+                    <View style={styles.itemCenter}>
+                        <Image source={{uri: iconApi}} style={{width: itemHeight, height: itemHeight}}/>
+                    </View>
+
+                    <View style={styles.itemRight}>
+                        <Text style={{fontSize: 40, fontWeight: 'bold', color: 'white'}}>{String(item.list[0].main.temp - 273.15).slice(0, 2)}°</Text>
+                    </View>
+                    
+                    </View>
+                </ImageBackground>
             </View>
+        
       </TouchableOpacity>
+      
     );
   };
 
@@ -74,26 +88,40 @@ const styles = StyleSheet.create({
         height: containerListHeight,
     },
     itemContainer: {
-        borderWidth: 1,
+        //borderWidth: 1,
         height: itemHeight,
         width: itemWidth,
         borderRadius: 25,
         marginVertical: itemMargin,
-        //elevation: 1,
+        elevation: 4,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        backgroundColor: 'rgba(126, 139, 157, 0.8)',
+        overflow: 'hidden',
+    },
+    itemContainer2: {
+        //borderWidth: 1,
+        height: itemHeight,
+        width: itemWidth,
+        borderRadius: 25,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
     },
     itemLeft: {
-        borderWidth: 1,
-        marginLeft: itemMargin,
+        //borderWidth: 1,
+        marginLeft: itemMargin * 2,
+        //alignItems: 'center',
+        justifyContent: 'center',
     },
     itemCenter: {
-        borderWidth: 1,
+        //borderWidth: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     itemRight: {
-        borderWidth: 1,
-        marginRight: itemMargin,
+        //borderWidth: 1,
+        marginRight: itemMargin * 2,
+        alignItems: 'center',
+        justifyContent: 'center',
     }
 });
 

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Button, Image, TouchableOpacity, Platform, Dimensions, ActivityIndicator, FlatList, Animated } from 'react-native';
+import { StyleSheet, Text, View, Button, Image, TouchableOpacity, Platform, Dimensions, ActivityIndicator, FlatList, Animated, ImageBackground } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux'
 import {setWeatherDay} from '../store/actions'
+import {backImage} from '../components/backImage';
 
 
 export default function Weather() {
@@ -10,9 +11,12 @@ export default function Weather() {
     const {weather} = useSelector((state) => state.reducer)
     const {weatherCity} = useSelector((state) => state.reducer)
     const DATA = weather[weatherCity].list
-    const filteredData = DATA.filter(days => days.dt_txt.includes('12:00:00'))
+    const nowTime = Number((DATA[0].dt_txt).slice(11, 13))
 
-
+    let filteredData = DATA.filter(days => days.dt_txt.includes('12:00:00'))
+    if (nowTime > 12) filteredData.unshift(DATA[0])
+    //console.log('filteredData: ', filteredData)
+    
     //-------------------------------------------------------------------------------------------------------------
     const renderItem = ({item, index}) => {
         const inputRange = [
@@ -28,17 +32,20 @@ export default function Weather() {
 
         const iconCode = item.weather[0].icon
         const iconApi = `http://openweathermap.org/img/wn/${iconCode}@2x.png`
-        const dayWeek = new Date(item.dt_txt).getDay()
-        const dayName = ['Sabato', 'Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì']
+        const dayWeek = new Date((item.dt_txt).slice(0, 10)).getDay()
+        const dayName = ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato']
         const monthName = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre']
+        //console.log('days: ', dayWeek)
 
         return (
             <Animated.View style={[styles.item, {transform: [{scale}]}]} key={index}>
-                <View style={{borderWidth: 1}}>
-                    <Text style={styles.title}>{dayName[dayWeek]}</Text>
-                    <Text>{String(item.main.temp - 273.15).slice(0, 2)}°</Text>
-                    <Image source={{uri: iconApi}} style={{width:50, height:50}}/>
-                </View>
+                <ImageBackground source={backImage(iconCode)} style={{width: '100%'}} blurRadius={10} >
+                    <View style={styles.itemContainer}>
+                        <Text style={{fontSize: 30, fontWeight: 'bold', color: 'white'}}>{dayName[dayWeek]}</Text>
+                        <Text style={{fontSize: 30, fontWeight: 'bold', color: 'white'}}>{String(item.main.temp - 273.15).slice(0, 2)}°</Text>
+                        <Image source={{uri: iconApi}} style={{width: 110, height: 110}}/>
+                    </View>
+                </ImageBackground>
             </Animated.View>
         )
     }
@@ -106,11 +113,18 @@ const styles = StyleSheet.create({
         width: ITEM_VIEW_WIDTH,
         marginHorizontal: ITEM_MARGIN / 2,
         alignItems: 'center', 
-        borderWidth: 1,
+        //borderWidth: 1,
         borderColor: 'grey',
         borderRadius: 25,
+        //marginBottom: height * 0.115,
+        overflow: 'hidden',
+        elevation: 4,
+        marginVertical: 5,
     },
-    title: {
-        fontSize: 24,
-    },
+    itemContainer: {
+        //borderWidth: 1,
+        height: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+    }
 })

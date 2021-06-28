@@ -27,3 +27,8 @@ const reducer = (state = initialState, action) => {
 }
 
 export default reducer
+
+const editWeatherPage = {  //sample to prevent error when edit
+    city: {name: 'Nuoro'},
+    list: [{dt_txt: "2021-06-26 21:00:00", main: {temp: 297.7}, weather: [{description: "pioggia leggera", icon: "10d"}]}, {dt_txt: "2021-06-26 21:00:00", main: {temp: 297.7}, weather: [{description: "pioggia leggera", icon: "10d"}]}, {dt_txt: "2021-06-26 21:00:00", main: {temp: 297.7}, weather: [{description: "pioggia leggera", icon: "10d"}]},]
+}

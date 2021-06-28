@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Button, Image, TouchableOpacity, Platform, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Button, Image, TouchableOpacity, Platform, Dimensions, ImageBackground } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux'
 import TabNavigation from '../components/tabNavigation'
 import { Feather } from '@expo/vector-icons';
@@ -8,10 +8,11 @@ import {colors} from '../components/color'
 import CityList from '../components/cityList'
 import axios from 'axios'
 import {setWeather} from '../store/actions'
-import MidleCityView from '../components/midleCityView';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 
 export default function Home() {
+    const navigation = useNavigation();
 
     const dispatch = useDispatch()
     const {myCity} = useSelector((state) => state.reducer)
@@ -26,8 +27,6 @@ export default function Home() {
         }, []);
     })}
     
-    
-
     return(
         <View style={styles.container} >
 
@@ -35,9 +34,8 @@ export default function Home() {
                 <Text style={styles.mainText}>Good morning!</Text>
                 <Text style={styles.mainText}>Alessandro e Francesco</Text>
             </View>
-            
 
-            <TouchableOpacity style={styles.touchAddCity}>
+            <TouchableOpacity style={styles.touchAddCity} onPress={() => {navigation.navigate('SearchCity')}}>
                 <Feather name="plus-square" size={26} color={colors.darkBlue} />
                 <Text style={styles.textAddCity}>Aggiungi città</Text>
             </TouchableOpacity>
@@ -45,12 +43,11 @@ export default function Home() {
             <View style={styles.cityList}>
                 <CityList />
             </View>
-
-            {/* <MidleCityView /> */}
             
             <View style={styles.header}>
                 <TabNavigation />
             </View>
+            
         </View>
     );
 }

@@ -19,15 +19,6 @@ export default function midleCityView() {
     if(weatherDay > 0) daysData = DATA.slice((weatherDay * 8 - indexDay) + 1, (weatherDay * 8 - indexDay) + 9) 
     else daysData = dataFirstDay
 
-    
-    //console.log( dataFirstDay )
-    console.log(' indexDay',  daysData)
-    //console.log('firstDay', firstDay)
-
-    
-    
-
-
     //-------------------------------------------------------------------------------------------------------------
     const renderItem = ({item, index}) => {
         const inputRange = [
@@ -54,12 +45,17 @@ export default function midleCityView() {
 
         return (
             <Animated.View style={[styles.item, {transform: [{scale}], opacity}]} key={index}>
-                <View style={{alignItems: 'center'}}>
-                    <Text>{(String(item.dt_txt).slice(11, 13))}</Text>
-
-                    <View style={{borderWidth: 0, height: 30, width: 30, borderRadius: 45, position: 'absolute', top: (ITEM_HEIGHT / 2 - 15), backgroundColor: 'grey'}}></View>
+                <View style={{alignItems: 'center', height: '100%', justifyContent: 'center'}}>
+                    <View style={{position: 'absolute', top: 30}}>
+                        <Text style={{fontSize: 20, fontWeight: 'bold', color: 'white'}}>{(String(item.dt_txt).slice(11, 13))}:00</Text>
+                    </View>
                     
-                    <Text>{String(item.main.temp - 273.15).slice(0, 2)}°</Text>
+
+                    <View style={{borderWidth: 0, height: 30, width: 30, borderRadius: 45, position: 'absolute', top: (ITEM_HEIGHT / 2 - 15), backgroundColor: 'white'}}></View>
+                    
+                    <View style={{position: 'absolute', bottom: 30}}>
+                        <Text style={{fontSize: 20, fontWeight: 'bold', color: 'white'}}>{String(item.main.temp - 273.15).slice(0, 2)}°</Text>
+                    </View>
                 </View>
             </Animated.View>
         )
@@ -106,7 +102,7 @@ const ITEM_VIEW_WIDTH = width * 0.15;
 const ITEM_MARGIN = 12;
 const ITEM_WIDTH = ITEM_VIEW_WIDTH + ITEM_MARGIN;
 const ITEM_HEIGHT = height * 0.22;
-const ITEM_SPACING = (width - ITEM_WIDTH) / 4;
+const ITEM_SPACING = (width - ITEM_WIDTH) / 2;
 
 const styles = StyleSheet.create({
       level1: {
@@ -123,14 +119,14 @@ const styles = StyleSheet.create({
     containerList: {
         height: ITEM_HEIGHT,
         flexGrow: 0,    // per accedere alle regolazione altezza
-        borderWidth: 1
+        //borderWidth: 1
     },
     item: {
         //backgroundColor: 'white',
         width: ITEM_VIEW_WIDTH,
         marginHorizontal: ITEM_MARGIN / 2,
         alignItems: 'center', 
-        borderWidth: 1,
+        //borderWidth: 1,
         borderColor: 'grey',
         borderRadius: 25,
     },

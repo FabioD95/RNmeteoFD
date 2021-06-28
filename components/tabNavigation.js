@@ -36,7 +36,7 @@ export default function tabNavigation() {
 
         <Feather name="map-pin" size={iconSize} color={colorIcon.FindCityAroundMe} style={[styles.icon, {borderBottomWidth: bottomWidth.FindCityAroundMe}]} onPress={() => {navigation.navigate('FindCityAroundMe')}}/>
 
-        <Fontisto name="day-cloudy" size={24} color={'red'} style={styles.icon} onPress={() => {navigation.navigate('CityWeather')}}/>
+        {/* <Fontisto name="day-cloudy" size={24} color={'red'} style={styles.icon} onPress={() => {navigation.navigate('CityWeather')}}/> */}
         
     </View>
   );
